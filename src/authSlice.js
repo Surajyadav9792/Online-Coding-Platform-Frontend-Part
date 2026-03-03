@@ -1,6 +1,5 @@
 import { createAsyncThunk,createSlice } from "@reduxjs/toolkit";
-import axiosClient from "./src/utils/axiosClient";
-
+import axiosClient from "./utils/axiosClient";
 
 export const registerUser=createAsyncThunk(
   'auth/register',
@@ -53,7 +52,7 @@ export const logoutUser=createAsyncThunk(
 
 const authSlice=createSlice({
     name:'auth',
-    initialState:{
+    initialState:{ 
         user:null,
         isAuthenticated:false,
         loading:false,
