@@ -14,6 +14,13 @@ function App() {
     dispatch(checkAuth());
   }, [dispatch]);
 
+//by this a loading spinner is appear
+if(loading){
+  return <div className="min-h-screen flex items-center justify-center">
+    <span className="loading loading-spinner loading-lg"></span>
+  </div>
+}
+
   return (
     <Routes>
       <Route 

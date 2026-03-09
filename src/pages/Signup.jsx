@@ -101,6 +101,7 @@ function Signup() {
         <div className="flex justify-center mt-8">
           <button
             type="submit"
+            //by this if our data is loading then signup button become freedge
             disabled={loading}
             className="btn btn-primary px-10 text-base font-semibold tracking-wide shadow-lg shadow-primary/30"
           >
