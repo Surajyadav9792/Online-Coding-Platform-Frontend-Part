@@ -1,0 +1,112 @@
+/* Container styling */
+.listContainer {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    font-family: 'Inter', sans-serif;
+}
+
+/* Title styling */
+.listTitle {
+    color: #1a202c;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* Table layout */
+.todoTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Header styling */
+.todoTable thead {
+    background-color: #f8fafc;
+}
+
+.todoTable th {
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #4a5568;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* Body row styling */
+.todoTable td {
+    padding: 15px;
+    color: #2d3748;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #edf2f7;
+    vertical-align: middle;
+}
+
+/* Zebra striping for readability */
+.todoTable tbody tr:nth-child(even) {
+    background-color: #fcfcfd;
+}
+
+/* Hover effect on rows */
+.todoTable tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* Delete Button Styling */
+.todoTable button {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.todoTable button:hover {
+    background-color: #dc2626;
+    color: white;
+}
+
+/* Update Link Styling */
+.todoTable a {
+    display: inline-block;
+    text-decoration: none;
+    color: #2563eb;
+    background-color: #dbeafe;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.todoTable a:hover {
+    background-color: #2563eb;
+    color: white;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 600px) {
+    .listContainer {
+        padding: 1rem;
+        margin: 10px;
+    }
+    .todoTable th:nth-child(3), 
+    .todoTable td:nth-child(3) {
+        display: none; /* Hide description on mobile to save space */
+    }
+}
