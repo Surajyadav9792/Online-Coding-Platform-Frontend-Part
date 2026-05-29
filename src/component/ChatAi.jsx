@@ -28,14 +28,16 @@ function ChatAi({problem}) {
 
     const onSubmit = async (data) => {
         
-        setMessages(prev => [...prev, { role: 'user', parts:[{text:data.message}] }]);
+        const newUserMessage = { role: 'user', parts:[{text:data.message}] };
+        const updatedMessages = [...messages, newUserMessage];
+        setMessages(updatedMessages);
         reset();
 
         try {
             
             const response = await axiosClient.post("/ai/chat", {
                //this data we send to the backend
-                messages: messages,
+                messages: updatedMessages,
                 title:problem.title,
                 description:problem.description,
                 testCases:problem.visibleTestCases,
@@ -50,7 +52,7 @@ function ChatAi({problem}) {
             console.error("API Error:", error);
             setMessages(prev => [...prev, { 
                 role: 'model', 
-                content: "Error from chatbot" 
+                parts: [{text: "Error from chatbot"}] 
             }]);
         }
     };
