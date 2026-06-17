@@ -7,6 +7,18 @@ import SubmissionHistory from '../component/SubmissionHistory';
 import ChatAi from '../component/ChatAi';
 import Editorial from '../component/Editorial';
 
+const getDefaultStarterCode = (lang) => {
+  switch (lang.toLowerCase()) {
+    case 'cpp':
+      return `#include <iostream>\nusing namespace std;\n\nint main() {\n    // write your code here\n    return 0;\n}`;
+    case 'java':
+      return `import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        // write your code here\n    }\n}`;
+    case 'javascript':
+    default:
+      return `const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim();\n// write code here`;
+  }
+};
+
 const ProblemPage = () => {
   const [problem, setProblem] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState('javascript');
@@ -27,16 +39,10 @@ const { id } = useParams();
         const response = await axiosClient.get(`/problem/problemById/${id}`);
 
         const initialCode = response.data.startCode?.find((sc) => {
-        
-        if (sc.language == "C++" && selectedLanguage == 'cpp')
-        return true;
-        else if (sc.language == "Java" && selectedLanguage == 'java')
-        return true;
-        else if (sc.language == "Javascript" && selectedLanguage == 'javascript')
-        return true;
-
-        return false;
-        })?.initialCode || 'Hello';
+          const dbLang = sc.language.toLowerCase();
+          const selLang = selectedLanguage.toLowerCase();
+          return (dbLang === 'c++' && selLang === 'cpp') || (dbLang === 'javascript' && selLang === 'javascript') || (dbLang === 'java' && selLang === 'java');
+        })?.initialCode || getDefaultStarterCode(selectedLanguage);
         setProblem(response.data);
         setCode(initialCode);
         setLoading(false);  
@@ -56,7 +62,7 @@ const { id } = useParams();
         const dbLang = sc.language.toLowerCase();
         const selLang = selectedLanguage.toLowerCase();
         return (dbLang === 'c++' && selLang === 'cpp') || (dbLang === 'javascript' && selLang === 'javascript') || (dbLang === 'java' && selLang === 'java');
-      })?.initialCode || '';
+      })?.initialCode || getDefaultStarterCode(selectedLanguage);
       setCode(initialCode);
     }
   }, [selectedLanguage, problem]);
