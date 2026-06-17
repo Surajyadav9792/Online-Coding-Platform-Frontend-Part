@@ -52,7 +52,11 @@ const { id } = useParams();
   // Update code when language changes
   useEffect(() => {
     if (problem) {
-      const initialCode = problem.startCode?.find(sc => sc.language === selectedLanguage)?.initialCode || '';
+      const initialCode = problem.startCode?.find((sc) => {
+        const dbLang = sc.language.toLowerCase();
+        const selLang = selectedLanguage.toLowerCase();
+        return (dbLang === 'c++' && selLang === 'cpp') || (dbLang === 'javascript' && selLang === 'javascript') || (dbLang === 'java' && selLang === 'java');
+      })?.initialCode || '';
       setCode(initialCode);
     }
   }, [selectedLanguage, problem]);
