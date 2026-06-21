@@ -59,7 +59,7 @@ const authSlice = createSlice({
   initialState: {
     user: null,
     isAuthenticated: false,
-    loading: false,
+    loading: typeof window !== 'undefined' && localStorage.getItem('wasLoggedIn') === 'true',
     error: null
   },
   reducers: {
@@ -75,6 +75,9 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = !!action.payload;
         state.user = action.payload;//data ko hum log action ke payload se se le lete hai kyu ki isi me sab chij ata hai
+        if (action.payload && typeof window !== 'undefined') {
+          localStorage.setItem('wasLoggedIn', 'true');
+        }
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -92,6 +95,9 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = !!action.payload;
         state.user = action.payload;
+        if (action.payload && typeof window !== 'undefined') {
+          localStorage.setItem('wasLoggedIn', 'true');
+        }
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -102,19 +108,27 @@ const authSlice = createSlice({
   
       // Check Auth Cases
       .addCase(checkAuth.pending, (state) => {
-        state.loading = true;
+        state.loading = typeof window !== 'undefined' && localStorage.getItem('wasLoggedIn') === 'true';
         state.error = null;
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = !!action.payload;
         state.user = action.payload;
+        if (action.payload) {
+          if (typeof window !== 'undefined') localStorage.setItem('wasLoggedIn', 'true');
+        } else {
+          if (typeof window !== 'undefined') localStorage.removeItem('wasLoggedIn');
+        }
       })
       .addCase(checkAuth.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || 'Something went wrong';
         state.isAuthenticated = false;
         state.user = null;
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('wasLoggedIn');
+        }
       })
   
       // Logout User Cases
@@ -127,6 +141,9 @@ const authSlice = createSlice({
         state.user = null;
         state.isAuthenticated = false;
         state.error = null;
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('wasLoggedIn');
+        }
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.loading = false;

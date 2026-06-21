@@ -5,6 +5,14 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React</title>
+    <script>
+      (function() {
+        const backendUrl = "%VITE_API_URL%";
+        if (backendUrl && !backendUrl.startsWith('%') && !backendUrl.includes('localhost') && !backendUrl.includes('127.0.0.1')) {
+          fetch(backendUrl + '/ping').catch(function() {});
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
