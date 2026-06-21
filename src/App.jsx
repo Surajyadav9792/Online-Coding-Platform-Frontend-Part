@@ -24,6 +24,8 @@ function App(){
 
 
   //if our loading is happen then a loading spinner is appears
+  // Note: loading state is initialized based on the 'wasLoggedIn' flag in localStorage.
+  // This prevents logged-out/guest users from seeing a 10s spinner during backend cold starts.
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">
       <span className="loading loading-spinner loading-lg"></span>
