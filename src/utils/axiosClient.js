@@ -1,4 +1,5 @@
 import axios from "axios"
+// API client instance configured with credentials support for HttpOnly cookies
 const axiosClient = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
     withCredentials: true,
