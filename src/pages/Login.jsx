@@ -8,8 +8,8 @@ import { useEffect, useState } from 'react';
 
 
 const loginSchema = z.object({
-  emailId: z.string().email("Invalid Email"),
-  password: z.string().min(8, "Password is too weak") 
+  emailId: z.string().min(1, "Email is required").email("Invalid Email"),
+  password: z.string().min(1, "Password is required").min(8, "Password must be at least 8 characters")
 });
 
 function Login() {

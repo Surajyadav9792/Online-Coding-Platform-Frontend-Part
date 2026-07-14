@@ -7,9 +7,9 @@ import { useNavigate, NavLink } from 'react-router';
 import { registerUser, clearError } from '../authSlice';
 
 const signupSchema = z.object({
-  firstName: z.string().min(3, "Minimum character should be 3"),
-  emailId: z.string().email("Invalid Email"),
-  password: z.string().min(8, "Password is too weak")
+  firstName: z.string().min(1, "First name is required").min(3, "Name length should be between 3 and 21"),
+  emailId: z.string().min(1, "Email is required").email("Invalid Email"),
+  password: z.string().min(1, "Password is required").min(8, "Password must be at least 8 characters")
 });
 
 function Signup() {
