@@ -6,12 +6,36 @@ const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
 
+  // Check if secureUrl is a YouTube video link or embed
+  const isYouTube = secureUrl?.includes('youtube.com') || secureUrl?.includes('youtu.be');
+  const getYouTubeEmbedUrl = (url) => {
+    if (!url) return '';
+    if (url.includes('youtube.com/embed/')) return url;
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|user\/.*\/))([a-zA-Z0-9_-]{11})/);
+    return match ? `https://www.youtube.com/embed/${match[1]}?autoplay=0` : url;
+  };
+
+  if (isYouTube) {
+    return (
+      <div className="relative w-full max-w-3xl mx-auto rounded-xl overflow-hidden shadow-2xl border border-base-300">
+        <iframe
+          className="w-full aspect-video rounded-xl"
+          src={getYouTubeEmbedUrl(secureUrl)}
+          title="LeetCode Problem Video Editorial Solution"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+      </div>
+    );
+  }
+
   // Format seconds to MM:SS
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
+
   const togglePlayPause = () => {
     if (videoRef.current) {
       if (isPlaying) {
@@ -23,7 +47,6 @@ const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
     }
   };
 
-  // Update current time during playback
   useEffect(() => {
     const video = videoRef.current;
     
@@ -79,7 +102,7 @@ const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
           <input
             type="range"
             min="0"
-            max={duration}
+            max={duration || 100}
             value={currentTime}
             onChange={(e) => {
               if(videoRef.current) {
@@ -89,7 +112,7 @@ const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
             className="range range-primary range-xs flex-1"
           />
           <span className="text-white text-sm ml-2">
-            {formatTime(duration)}
+            {formatTime(duration || 100)}
           </span>
         </div>
       </div>
