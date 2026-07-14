@@ -323,7 +323,7 @@ const { id } = useParams();
               </div>
 
               {/* Monaco Editor */}
-              <div className="flex-1">
+              <div className="flex-1 relative min-h-[400px] h-full">
                 <Editor
                   height="100%"
                   language={getLanguageForMonaco(selectedLanguage)}
@@ -331,6 +331,12 @@ const { id } = useParams();
                   onChange={handleEditorChange}
                   onMount={handleEditorDidMount}
                   theme="vs-dark"
+                  loading={
+                    <div className="flex justify-center items-center h-full text-sm text-base-content/70">
+                      <span className="loading loading-spinner loading-md mr-2"></span>
+                      Loading Professional Code Editor...
+                    </div>
+                  }
                   options={{
                     fontSize: 14,
                     minimap: { enabled: false },
