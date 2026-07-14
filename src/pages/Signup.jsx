@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router';
-import { registerUser } from '../authSlice';
+import { registerUser, clearError } from '../authSlice';
 
 const signupSchema = z.object({
   firstName: z.string().min(3, "Minimum character should be 3"),
@@ -16,7 +16,7 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isAuthenticated, loading } = useSelector((state) => state.auth); // Removed error as it wasn't used
+  const { isAuthenticated, loading, error } = useSelector((state) => state.auth);
 
   const { register,handleSubmit, formState: { errors },
   } = useForm({ resolver: zodResolver(signupSchema) });
@@ -36,6 +36,16 @@ function Signup() {
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body">
           <h2 className="card-title justify-center text-3xl mb-6">Leetcode</h2> {/* Added mb-6 for spacing */}
+
+          {error && (
+            <div role="alert" className="alert alert-error mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>{error}</span>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* First Name Field */}
             <div className="form-control">
@@ -47,6 +57,7 @@ function Signup() {
                 placeholder="John"
                 className={`input input-bordered w-full ${errors.firstName ? 'input-error' : ''}`} 
                 {...register('firstName')}
+                onChange={() => { if (error) dispatch(clearError()); }}
               />
               {errors.firstName && (
                 <span className="text-error text-sm mt-1">{errors.firstName.message}</span>
@@ -63,6 +74,7 @@ function Signup() {
                 placeholder="john@example.com"
                 className={`input input-bordered w-full ${errors.emailId ? 'input-error' : ''}`} // Ensure w-full for consistency
                 {...register('emailId')}
+                onChange={() => { if (error) dispatch(clearError()); }}
               />
               {errors.emailId && (
                 <span className="text-error text-sm mt-1">{errors.emailId.message}</span>
@@ -81,6 +93,7 @@ function Signup() {
                   // Added pr-10 (padding-right) to make space for the button
                   className={`input input-bordered w-full pr-10 ${errors.password ? 'input-error' : ''}`}
                   {...register('password')}
+                  onChange={() => { if (error) dispatch(clearError()); }}
                 />
                 <button
                   type="button"
