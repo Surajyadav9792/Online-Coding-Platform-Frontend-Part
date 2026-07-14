@@ -47,7 +47,11 @@ function Homepage() {
 
   const filteredProblems = problems.filter(problem => {
     const difficultyMatch = filters.difficulty === 'all' || problem.difficulty === filters.difficulty;
-    const tagMatch = filters.tag === 'all' || problem.tags === filters.tag;
+    const tagMatch = filters.tag === 'all' || (
+      Array.isArray(problem.tags) 
+        ? problem.tags.includes(filters.tag) 
+        : problem.tags === filters.tag
+    );
     const statusMatch = filters.status === 'all' || solvedProblems.some(sp => sp._id === problem._id);
     return difficultyMatch && tagMatch && statusMatch;
   });
@@ -135,9 +139,11 @@ function Homepage() {
                   <div className={`badge ${getDifficultyBadgeColor(problem.difficulty)}`}>
                     {problem.difficulty}
                   </div>
-                  <div className="badge badge-info">
-                    {problem.tags}
-                  </div>
+                  {(Array.isArray(problem.tags) ? problem.tags : [problem.tags]).map((t, idx) => (
+                    <div key={idx} className="badge badge-info">
+                      {t}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
