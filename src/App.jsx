@@ -11,14 +11,16 @@ import Admin from "./pages/Admin";
 import AdminDelete from "./component/Admindelete";
 import AdminVideo from "./component/AdminVideo";
 import AdminUpload from "./component/AdminUpload";
+import axiosClient from "./utils/axiosClient";
 
 
 function App(){
   const dispatch = useDispatch();
   const {isAuthenticated,user,loading} = useSelector((state)=>state.auth);
 
-  // check initial authentication
+  // check initial authentication and pre-warm free-tier backend
   useEffect(() => {
+    axiosClient.get('/ping').catch(() => {});
     dispatch(checkAuth());
   }, [dispatch]);
 
