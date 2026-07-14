@@ -56,8 +56,9 @@ function Signup() {
                 type="text"
                 placeholder="John"
                 className={`input input-bordered w-full ${errors.firstName ? 'input-error' : ''}`} 
-                {...register('firstName')}
-                onChange={() => { if (error) dispatch(clearError()); }}
+                {...register('firstName', {
+                  onChange: () => { if (error) dispatch(clearError()); }
+                })}
               />
               {errors.firstName && (
                 <span className="text-error text-sm mt-1">{errors.firstName.message}</span>
@@ -73,8 +74,9 @@ function Signup() {
                 type="email"
                 placeholder="john@example.com"
                 className={`input input-bordered w-full ${errors.emailId ? 'input-error' : ''}`} // Ensure w-full for consistency
-                {...register('emailId')}
-                onChange={() => { if (error) dispatch(clearError()); }}
+                {...register('emailId', {
+                  onChange: () => { if (error) dispatch(clearError()); }
+                })}
               />
               {errors.emailId && (
                 <span className="text-error text-sm mt-1">{errors.emailId.message}</span>
@@ -92,8 +94,9 @@ function Signup() {
                   placeholder="••••••••"
                   // Added pr-10 (padding-right) to make space for the button
                   className={`input input-bordered w-full pr-10 ${errors.password ? 'input-error' : ''}`}
-                  {...register('password')}
-                  onChange={() => { if (error) dispatch(clearError()); }}
+                  {...register('password', {
+                    onChange: () => { if (error) dispatch(clearError()); }
+                  })}
                 />
                 <button
                   type="button"

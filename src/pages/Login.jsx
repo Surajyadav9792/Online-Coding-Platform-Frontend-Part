@@ -57,8 +57,9 @@ function Login() {
                 type="email"
                 placeholder="john@example.com"
                 className={`input input-bordered w-full ${errors.emailId ? 'input-error' : ''}`} 
-                {...register('emailId')}
-                onChange={() => { if (error) dispatch(clearError()); }}
+                {...register('emailId', {
+                  onChange: () => { if (error) dispatch(clearError()); }
+                })}
               />
               {errors.emailId && (
                 <span className="text-error text-sm mt-1">{errors.emailId.message}</span>
@@ -74,8 +75,9 @@ function Login() {
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   className={`input input-bordered w-full pr-10 ${errors.password ? 'input-error' : ''}`}
-                  {...register('password')}
-                  onChange={() => { if (error) dispatch(clearError()); }}
+                  {...register('password', {
+                    onChange: () => { if (error) dispatch(clearError()); }
+                  })}
                 />
                 <button
                   type="button"
