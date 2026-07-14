@@ -46,15 +46,29 @@ function Homepage() {
   };
 
   const filteredProblems = problems.filter(problem => {
-    const difficultyMatch = filters.difficulty === 'all' || problem.difficulty === filters.difficulty;
+    const probDifficulty = problem.difficulty ? problem.difficulty.toLowerCase() : '';
+    const targetDifficulty = filters.difficulty.toLowerCase();
+    const difficultyMatch = filters.difficulty === 'all' || probDifficulty === targetDifficulty;
+
+    const targetTag = filters.tag.toLowerCase();
     const tagMatch = filters.tag === 'all' || (
-      Array.isArray(problem.tags) 
-        ? problem.tags.includes(filters.tag) 
-        : problem.tags === filters.tag
+      Array.isArray(problem.tags)
+        ? problem.tags.some(t => t.toLowerCase() === targetTag)
+        : (problem.tags ? problem.tags.toLowerCase() === targetTag : false)
     );
-    const statusMatch = filters.status === 'all' || solvedProblems.some(sp => sp._id === problem._id);
+
+    const isSolved = solvedProblems.some(sp => String(sp._id) === String(problem._id));
+    const statusMatch = 
+      filters.status === 'all' ? true :
+      filters.status === 'solved' ? isSolved :
+      !isSolved;
+
     return difficultyMatch && tagMatch && statusMatch;
   });
+
+  const resetFilters = () => {
+    setFilters({ difficulty: 'all', tag: 'all', status: 'all' });
+  };
 
   return (
     <div className="min-h-screen bg-base-200">
@@ -80,7 +94,7 @@ function Homepage() {
       <div className="container mx-auto p-4">
         {/* Filters */}
         <div className="flex flex-wrap gap-4 mb-6">
-          {/* New Status Filter */}
+          {/* Status Filter */}
           <select 
             className="select select-bordered"
             value={filters.status}
@@ -88,6 +102,7 @@ function Homepage() {
           >
             <option value="all">All Problems</option>
             <option value="solved">Solved Problems</option>
+            <option value="unsolved">Unsolved Problems</option>
           </select>
 
           <select 
@@ -115,40 +130,52 @@ function Homepage() {
         </div>
 
         {/* Problems List */}
-        <div className="grid gap-4">
-          {filteredProblems.map(problem => (
-            <div key={problem._id} className="card bg-base-100 shadow-xl">
-              <div className="card-body">
-                <div className="flex items-center justify-between">
-                  <h2 className="card-title">
-                    <NavLink to={`/problemById/${problem._id}`} className="hover:text-primary">
-                       {problem.title}
-                    </NavLink>
-                  </h2>
-                  {solvedProblems.some(sp => sp._id === problem._id) && (
-                    <div className="badge badge-success gap-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                      Solved
-                    </div>
-                  )}
-                </div>
-                
-                <div className="flex gap-2">
-                  <div className={`badge ${getDifficultyBadgeColor(problem.difficulty)}`}>
-                    {problem.difficulty}
+        {filteredProblems.length === 0 ? (
+          <div className="card bg-base-100 shadow-xl p-8 text-center">
+            <h3 className="text-xl font-bold mb-2">No problems found</h3>
+            <p className="text-gray-500 mb-4">No problems match your current filter combination.</p>
+            <div>
+              <button onClick={resetFilters} className="btn btn-outline btn-primary btn-sm">
+                Reset Filters
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="grid gap-4">
+            {filteredProblems.map(problem => (
+              <div key={problem._id} className="card bg-base-100 shadow-xl">
+                <div className="card-body">
+                  <div className="flex items-center justify-between">
+                    <h2 className="card-title">
+                      <NavLink to={`/problemById/${problem._id}`} className="hover:text-primary">
+                         {problem.title}
+                      </NavLink>
+                    </h2>
+                    {solvedProblems.some(sp => String(sp._id) === String(problem._id)) && (
+                      <div className="badge badge-success gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                        Solved
+                      </div>
+                    )}
                   </div>
-                  {(Array.isArray(problem.tags) ? problem.tags : [problem.tags]).map((t, idx) => (
-                    <div key={idx} className="badge badge-info">
-                      {t}
+                  
+                  <div className="flex gap-2">
+                    <div className={`badge ${getDifficultyBadgeColor(problem.difficulty)}`}>
+                      {problem.difficulty}
                     </div>
-                  ))}
+                    {(Array.isArray(problem.tags) ? problem.tags : [problem.tags]).map((t, idx) => (
+                      <div key={idx} className="badge badge-info">
+                        {t}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
