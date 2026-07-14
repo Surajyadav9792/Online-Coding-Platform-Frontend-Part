@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 
 const loginSchema = z.object({
-  emailId: z.string().min(1, "Email is required"),
+  emailId: z.string().min(1, "Email is required").email("Invalid Email"),
   password: z.string().min(1, "Password is required")
 });
 
