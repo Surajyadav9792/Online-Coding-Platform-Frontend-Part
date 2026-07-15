@@ -34,14 +34,25 @@ export const loginUser = createAsyncThunk(
 export const checkAuth = createAsyncThunk(
   'auth/check',
   async (_, { rejectWithValue }) => {
+    // AbortController with 10s timeout — prevents infinite spinner on cold start
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
     try {
-      const { data } = await axiosClient.get('/user/check');
+      const { data } = await axiosClient.get('/user/check', {
+        signal: controller.signal
+      });
       return data.user;
     } catch (error) {
       if (error.response?.status === 401) {
         return rejectWithValue(null); // Special case for no session
       }
+      // Timeout or network error — treat as not logged in
+      if (error.code === 'ECONNABORTED' || error.name === 'CanceledError') {
+        return rejectWithValue(null);
+      }
       return rejectWithValue(error);
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
 );
