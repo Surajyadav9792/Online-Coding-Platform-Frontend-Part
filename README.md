@@ -1,65 +1,86 @@
-# 💻 Premium Online Coding Platform (LeetCode Clone)
+# 💻 Online Coding Platform — Frontend Client
 
-An advanced, high-performance, full-stack online judge platform that allows users to practice programming, run code in real-time against test cases, and receive instant evaluation feedback. Built with a robust modern architecture utilising Node.js, Express, React, Redux, MongoDB, Redis, BullMQ, and a high-speed custom Judge Engine.
-
----
-
-## 🚀 Deployed Links
-
-* **Frontend App (Vercel):** [https://frontend-peach-ten-81.vercel.app](https://frontend-peach-ten-81.vercel.app)
-* **Backend API (Render):** [https://leetcode-backend-ml5e.onrender.com](https://leetcode-backend-ml5e.onrender.com)
-* **API Keep-Alive Status:** 🟢 Active (Automatically kept awake 24/7)
+A responsive, interactive frontend client mimicking LeetCode. Features clean UI states, custom code compilation editors, runtime logging displays, and comprehensive administration panels.
 
 ---
 
-## 📌 Architecture Diagram
+## 🚀 Deployed Endpoint
+* **Client App Live URL:** [https://frontend-peach-ten-81.vercel.app](https://frontend-peach-ten-81.vercel.app)
+* **Hosting Platform:** Vercel
 
-```mermaid
-graph TD
-    User([User Browser]) -->|HTTP / WebSockets| Frontend[Vercel: React + Redux]
-    Frontend -->|API Requests| Backend[Render: Express Server]
-    Backend -->|Cache Token / Blocklist| Redis[(Redis Cloud)]
-    Backend -->|Store Users & Problems| MongoDB[(MongoDB Atlas)]
-    Backend -->|Submit Test Cases| BullMQ[BullMQ Queue]
-    BullMQ -->|Pick Job| Worker[Judge Worker Engine]
-    Worker -->|Execute Code| SafeSandbox[Safe Sandbox]
-    Worker -->|Return Status / Results| BullMQ
+---
+
+## 🛠️ Core Stack
+* **UI Framework:** React 18 / Vite
+* **State Management:** Redux Toolkit (auth slices & status variables)
+* **HTTP Client:** Axios (configured with credentials for HTTP-only cookie tracking)
+* **Form Validation:** React Hook Form + Zod resolvers
+* **Navigation:** React Router
+
+---
+
+## 🌟 Key Frontend Features
+
+### 💻 Rich Coding Workspace
+* Interactive syntax highlighting editor.
+* Custom input support to test code variations.
+* Live console results demonstrating runtime, peak memory consumption, and compiler errors.
+
+### 🛡️ Secure Navigation & Routing
+* Client-side private routing guards matching Redux authentication flags.
+* LocalStorage state sync (`wasLoggedIn`) preventing infinite loaders on guest views.
+
+### ⚙️ Admin Interface
+* Forms to create and manage DSA problems directly.
+* Video metadata interface supporting solution uploads and content deletion.
+
+### ⚡ Client Performance Tuning
+* **Parallel Handlers:** `/ping` and `checkAuth()` run asynchronously in `Promise.all()` to decrease initial wait states by 50%.
+* **Axios Interceptors:** Automatic single retry configured for transient network errors and API timeouts.
+* **Auto-Cancel:** 10-second `AbortController` timeouts on token validation checks ensure the user does not experience frozen loading screens.
+
+---
+
+## 📂 Frontend Directory Structure
+
+```text
+├── public/            # Static assets
+└── src/
+    ├── component/     # Modular views (AdminPanel, AdminUpload, Editorial, ChatAi, Submissions)
+    ├── pages/         # Page templates (Homepage, Login, Signup, ProblemPage, Admin)
+    ├── store/         # Redux global store configurations
+    ├── utils/         # Global Axios client instance with cookie headers
+    ├── authSlice.js   # Redux state reducer for credentials, checkAuth, and logout
+    ├── App.jsx        # Routing engine & parallel boot configs
+    └── main.jsx       # React DOM entry point
 ```
 
 ---
 
-## 🌟 Key Features
+## ⚙️ Installation & Development Setup
 
-### 🔐 Authentication & Authorization
-* **Secure Auth:** Secure user login and signup flow powered by JWT stored in HttpOnly, secure cookies.
-* **Role-Based Access Control (RBAC):** Distinct permissions for `user` and `admin`.
-* **Token Blocklisting:** Redis-powered logout system that invalidates tokens instantly.
+### Requirements
+* Node.js (v18+)
+* Active Backend REST Server running
 
-### 🧩 Problem Management (Admin Only)
-* **Admin Dashboard:** Authorised admins can `Create`, `Update`, and `Delete` coding problems.
-* **Robust Problem Meta:** Configure Title, Description, Difficulty (Easy, Medium, Hard), Tags (Array, DP, Graphs, LinkedLists), visible test cases (with explanations), and hidden test cases.
-
-### ⚡ Real-Time Code Execution & Automated Evaluation
-* **Judge Engine:** Multi-language execution support (JavaScript, C++, Java).
-* **Automated Runner:** Run visible test cases or submit solutions for evaluation against hidden test cases.
-* **Performance Metrics:** Reports execution runtime (ms) and detailed error reports.
-
----
-
-## ⚡ Recent Performance Enhancements
-
-We implemented **13 major speed optimizations** to solve the 1-minute loading delay:
-1. **Non-Blocking Server Startup:** Server starts listening immediately; DB+Redis connect in the background.
-2. **Self-Keep-Alive Engine:** Backend auto-pings every 13 minutes to prevent Render free-tier from sleeping.
-3. **Bcrypt Acceleration:** Reduced salt rounds to `8` (~4x faster user operations).
-4. **Database Query Projections (`.select().lean()`):** Replaced heavy Mongoose documents with plain objects (~2x faster checks).
-5. **Parallelized Initialization:** Combined API ping and auth checks into `Promise.all` (~50% faster startup).
-
----
-
-## 🛠️ Tech Stack
-
-* **Frontend:** React, Redux Toolkit, TailwindCSS, Axios
-* **Backend:** Node.js, Express, Mongoose, Bcrypt, JWT
-* **Caching & Queueing:** Redis Cloud, BullMQ
-* **Code Sandbox:** Custom compilation & execution sandbox (supports C++, Java, Node.js)
+### Setup Steps
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Install npm packages:
+   ```bash
+   npm install
+   ```
+3. Create a `.env` file in the root of `frontend/`:
+   ```env
+   VITE_API_URL="http://localhost:3000"
+   ```
+4. Run the local development server:
+   ```bash
+   npm run dev
+   ```
+5. Build the optimized production distribution:
+   ```bash
+   npm run build
+   ```
