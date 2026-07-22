@@ -29,8 +29,8 @@ const ProblemPage = () => {
   const [activeLeftTab, setActiveLeftTab] = useState('description');
   const [activeRightTab, setActiveRightTab] = useState('code');
   const editorRef = useRef(null);
-const { id } = useParams();
- //console.log("ID =", id);
+  const { id } = useParams();
+  //console.log("ID =", id);
   const { handleSubmit } = useForm();
   useEffect(() => {
     const fetchProblem = async () => {
@@ -45,7 +45,7 @@ const { id } = useParams();
         })?.initialCode || getDefaultStarterCode(selectedLanguage);
         setProblem(response.data);
         setCode(initialCode);
-        setLoading(false);  
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching problem:', error);
         setLoading(false);
@@ -82,7 +82,7 @@ const { id } = useParams();
   const handleRun = async () => {
     setLoading(true);
     setRunResult(null);
-    
+
     try {
       const response = await axiosClient.post(`/submission/run/${id}`, {
         code,
@@ -92,7 +92,7 @@ const { id } = useParams();
       setRunResult(response.data);
       setLoading(false);
       setActiveRightTab('testcase');
-      
+
     } catch (error) {
       console.error('Error running code:', error);
       setRunResult({
@@ -107,17 +107,17 @@ const { id } = useParams();
   const handleSubmitCode = async () => {
     setLoading(true);
     setSubmitResult(null);
-    
+
     try {
-        const response = await axiosClient.post(`/submission/submit/${id}`, {
-        code:code,
+      const response = await axiosClient.post(`/submission/submit/${id}`, {
+        code: code,
         language: selectedLanguage
       });
 
-       setSubmitResult(response.data);
-       setLoading(false);
-       setActiveRightTab('result');
-      
+      setSubmitResult(response.data);
+      setLoading(false);
+      setActiveRightTab('result');
+
     } catch (error) {
       console.error('Error submitting code:', error);
       setSubmitResult(null);
@@ -158,31 +158,31 @@ const { id } = useParams();
       <div className="w-1/2 flex flex-col border-r border-base-300">
         {/* Left Tabs */}
         <div className="tabs tabs-bordered bg-base-200 px-4">
-          <button 
+          <button
             className={`tab ${activeLeftTab === 'description' ? 'tab-active' : ''}`}
             onClick={() => setActiveLeftTab('description')}
           >
             Description
           </button>
-          <button 
+          <button
             className={`tab ${activeLeftTab === 'editorial' ? 'tab-active' : ''}`}
             onClick={() => setActiveLeftTab('editorial')}
           >
             Editorial
           </button>
-          <button 
+          <button
             className={`tab ${activeLeftTab === 'solutions' ? 'tab-active' : ''}`}
             onClick={() => setActiveLeftTab('solutions')}
           >
             Solutions
           </button>
-          <button 
+          <button
             className={`tab ${activeLeftTab === 'submissions' ? 'tab-active' : ''}`}
             onClick={() => setActiveLeftTab('submissions')}
           >
             Submissions
           </button>
-           <button 
+          <button
             className={`tab ${activeLeftTab === 'chatAI' ? 'tab-active' : ''}`}
             onClick={() => setActiveLeftTab('chatAI')}
           >
@@ -209,7 +209,7 @@ const { id } = useParams();
                       {problem.description}
                     </div>
                   </div>
-                    
+
                   <div className="mt-8">
                     <h3 className="text-lg font-semibold mb-4">Examples:</h3>
                     <div className="space-y-4">
@@ -232,7 +232,7 @@ const { id } = useParams();
                 <div className="prose max-w-none">
                   <h2 className="text-xl font-bold mb-4">Editorial</h2>
                   <div className="whitespace-pre-wrap text-sm leading-relaxed">
-                  <Editorial secureUrl={problem.secureUrl} thumbnailUrl={problem.thumbnailUrl} duration={problem.duration}/>
+                    <Editorial secureUrl={problem.secureUrl} thumbnailUrl={problem.thumbnailUrl} duration={problem.duration} />
                   </div>
                 </div>
               )}
@@ -261,12 +261,12 @@ const { id } = useParams();
                 <div>
                   <h2 className="text-xl font-bold mb-4">My Submissions</h2>
                   <div className="text-gray-500">
-                <SubmissionHistory problemId={id} />
+                    <SubmissionHistory problemId={id} />
                   </div>
                 </div>
               )}
 
-               {activeLeftTab === 'chatAI' && (
+              {activeLeftTab === 'chatAI' && (
                 <div className="prose max-w-none">
                   <h2 className="text-xl font-bold mb-4">Chat With AI</h2>
                   <div className="whitespace-pre-wrap text-sm leading-relaxed">
@@ -283,19 +283,19 @@ const { id } = useParams();
       <div className="w-1/2 flex flex-col">
         {/* Right Tabs */}
         <div className="tabs tabs-bordered bg-base-200 px-4">
-          <button 
+          <button
             className={`tab ${activeRightTab === 'code' ? 'tab-active' : ''}`}
             onClick={() => setActiveRightTab('code')}
           >
             Code
           </button>
-          <button 
+          <button
             className={`tab ${activeRightTab === 'testcase' ? 'tab-active' : ''}`}
             onClick={() => setActiveRightTab('testcase')}
           >
             Testcase
           </button>
-          <button 
+          <button
             className={`tab ${activeRightTab === 'result' ? 'tab-active' : ''}`}
             onClick={() => setActiveRightTab('result')}
           >
@@ -363,7 +363,7 @@ const { id } = useParams();
               {/* Action Buttons */}
               <div className="p-4 border-t border-base-300 flex justify-between">
                 <div className="flex gap-2">
-                  <button 
+                  <button
                     className="btn btn-ghost btn-sm"
                     onClick={() => setActiveRightTab('testcase')}
                   >
@@ -399,9 +399,9 @@ const { id } = useParams();
                     {runResult.success ? (
                       <div>
                         <h4 className="font-bold">✅ All test cases passed!</h4>
-                        <p className="text-sm mt-2">Runtime: {runResult?.runtime+" sec"}</p>
-                        <p className="text-sm">Memory: {runResult?.memory+" KB"}</p>
-                        
+                        <p className="text-sm mt-2">Runtime: {runResult?.runtime + " sec"}</p>
+                        <p className="text-sm">Memory: {runResult?.memory + " KB"}</p>
+
                         <div className="mt-4 space-y-2">
                           {runResult?.testCases?.map((tc, i) => (
                             <div key={i} className="bg-base-100 p-3 rounded text-xs">
@@ -427,8 +427,8 @@ const { id } = useParams();
                                 <div><strong>Input:</strong> {tc?.stdin}</div>
                                 <div><strong>Expected:</strong> {tc?.expected_output}</div>
                                 <div><strong>Output:</strong> {tc?.stdout}</div>
-                                <div className={tc?.status_id==3 ? 'text-green-600' : 'text-red-600'}>
-                                  {tc?.status_id==3 ? '✓ Passed' : '✗ Failed'}
+                                <div className={tc?.status_id == 3 ? 'text-green-600' : 'text-red-600'}>
+                                  {tc?.status_id == 3 ? '✓ Passed' : '✗ Failed'}
                                 </div>
                               </div>
                             </div>
